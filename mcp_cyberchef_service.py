@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import json
 import os
+from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any, Dict, List, TypeAlias
 from urllib.error import HTTPError
@@ -131,8 +132,19 @@ def _enum_table(op: str, arg_name: str) -> Dict[str, str]:
     op_def = CYBERCHEF_OPERATIONS.get(op) or {}
     for a in op_def.get("args", []):
         if a.get("name") == arg_name:
-            opts = a.get("options", a.get("value", [])) or []
-            return {_slug(str(o)): str(o) for o in opts}
+            opts = [str(o) for o in (a.get("options", a.get("value", [])) or [])]
+            slugs = [_slug(o) for o in opts]
+            counts = Counter(slugs)
+            buckets = defaultdict(list)
+            for slug, label in zip(slugs, opts): buckets[slug].append(label)
+            out = {}
+            for slug, labels in buckets.items():
+                if counts[slug] == 1:
+                    out[slug] = labels[0]
+                else:
+                    for idx, label in enumerate(labels, 1):
+                        out[f"{slug}-{idx}"] = label
+            return out
     return {}
 
 
@@ -443,6 +455,9 @@ def validate_recipe(req: ValidateRecipeIn) -> ValidateRecipeOut:
             continue
         expected = [a.get("name") for a in CYBERCHEF_OPERATIONS[name].get("args", [])]
         got = list((step.args or {}).keys())
+        unexpected = [k for k in got if k not in expected]
+        if unexpected:
+            suggestions.append(SuggestionItem(index=i, op=name, missingArgs=None))  # add a new field if you want, e.g. unexpectedArgs
         missing = [k for k in expected if k not in got]
         if missing:
             suggestions.append(SuggestionItem(index=i, op=name, missingArgs=missing))

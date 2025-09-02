@@ -85,6 +85,6 @@ class ValidateRecipeIn(BaseModel):
 
 class ValidateRecipeOut(BaseModel):
     ok: bool
-    errors: List[str] = []
-    suggestions: List[SuggestionItem] = []
+    errors: List[str] = Field(default_factory=list)
+    suggestions: List[SuggestionItem] = Field(default_factory=list)
     normalized: Optional[List[RecipeOp]] = None
