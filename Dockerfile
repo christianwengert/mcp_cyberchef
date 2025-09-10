@@ -7,7 +7,7 @@
 # Cross platform
 # Only once: docker buildx create --use --name xbuilder2
 # docker buildx use xbuilder2
-# docker buildx build --platform linux/amd64 -f mcp_servers/mcp_cyberchef/Dockerfile -t python-executor-mcp-amd64 --load .
+# docker buildx build --platform linux/amd64 -f mcp_servers/mcp_cyberchef/Dockerfile -t cyberchef-mcp-amd64 --load .
 # docker buildx use default
 FROM python:3-slim
 
@@ -29,7 +29,7 @@ RUN pip install --upgrade pip setuptools wheel \
     && pip install -r requirements.txt
 
 # Copy the rest of the source code (entire repo context)
-COPY .. .
+COPY . /app
 
 # Expose the MCP server port
 EXPOSE 3001
