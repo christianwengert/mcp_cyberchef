@@ -16,10 +16,10 @@ from pydantic import ValidationError, BaseModel
 
 from rapidfuzz import fuzz, utils, process
 
-from mcp_servers.mcp_cyberchef.data_models.cyberchef_pydantic_models import load_definitions
-from mcp_servers.mcp_cyberchef.data_models.tools import GetOperationArgsIn, GetOperationArgsOut, ArgItem, SearchOpsOut, \
-    OperationItem, BakeRecipeResponse, RecipeOp, BatchBakeRecipeResponse, ProbeIn, ProbeOut, ValidateRecipeIn, \
-    ValidateRecipeOut, SuggestionItem
+from data_models.cyberchef_pydantic_models import load_definitions
+from data_models.tools import GetOperationArgsIn, GetOperationArgsOut, ArgItem, SearchOpsOut, OperationItem, \
+    BakeRecipeResponse, RecipeOp, BatchBakeRecipeResponse, ProbeIn, ProbeOut, ValidateRecipeOut, ValidateRecipeIn, \
+    SuggestionItem
 
 BYTE_CAP = 1_024
 DEFAULT_LIMIT = 10
@@ -136,7 +136,8 @@ def _enum_table(op: str, arg_name: str) -> Dict[str, str]:
             slugs = [_slug(o) for o in opts]
             counts = Counter(slugs)
             buckets = defaultdict(list)
-            for slug, label in zip(slugs, opts): buckets[slug].append(label)
+            for slug, label in zip(slugs, opts):
+                buckets[slug].append(label)
             out = {}
             for slug, labels in buckets.items():
                 if counts[slug] == 1:

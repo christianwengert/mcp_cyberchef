@@ -2,8 +2,24 @@ const fs = require('fs');
 const path = require('path');
 const { pathToFileURL } = require('url');
 
-const operationsDir = './src/core/operations';
-const outputFile = 'operations.json';
+// CLI arguments parsing for operationsDir and outputFile
+function parseCliArgs(argv) {
+  const args = { operationsDir: './src/core/operations', outputFile: 'operations.json' };
+  for (let i = 2; i < argv.length; i++) {
+    const a = argv[i];
+    if (a === '--operationsDir' && i + 1 < argv.length) {
+      args.operationsDir = argv[++i];
+    } else if (a === '--outputFile' && i + 1 < argv.length) {
+      args.outputFile = argv[++i];
+    }
+  }
+  // Resolve to absolute paths relative to current working directory
+  args.operationsDir = path.resolve(process.cwd(), args.operationsDir);
+  args.outputFile = path.resolve(process.cwd(), args.outputFile);
+  return args;
+}
+
+const { operationsDir, outputFile } = parseCliArgs(process.argv);
 
 // Parse named import statements to map identifiers to module paths
 function parseImportMap(fileContent, filePath) {

@@ -1,15 +1,3 @@
-# Dockerfile to run the CyberChef MCP Service
-# Builds a lightweight image and starts the MCP server on port 3001.
-# Run it from agents/ directory
-# `docker build -f mcp_servers/Dockerfile -t cyberchef-mcp .`
-#
-#
-# Cross platform
-# Only once: docker buildx create --use --name xbuilder2
-# docker buildx use xbuilder2
-# docker buildx build --platform linux/amd64 -f mcp_servers/mcp_cyberchef/Dockerfile -t cyberchef-mcp-amd64 --load .
-# docker buildx use default
-#
 FROM python:3-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
@@ -33,7 +21,7 @@ RUN pip install --upgrade pip setuptools wheel \
 COPY . /app
 
 # Expose the MCP server port
-EXPOSE 3001
+EXPOSE 3002
 
 # By default, the service targets a CyberChef API at http://localhost:3000/.
 # You can override from docker run with: -e CYBERCHEF_API_URL=<url>
@@ -42,10 +30,9 @@ EXPOSE 3001
 
 # Start the MCP service
 # Pass runtime parameters via docker run, e.g.:
-#   docker run --rm -p 3001:3001 \
+#   docker run --rm -p 3002:3002 \
 #     cyberchef-mcp \
 #     --api-url http://host.docker.internal:3000/ \
 #     --host 0.0.0.0 \
-#     --port 3001
-ENTRYPOINT ["python", "-u", "-m", "mcp_servers.mcp_cyberchef_service"]
-# Latest on Macbook: docker run --name cyberchef-mcp -d -p 3001:3001  cyberchef-mcp  --api-url http://host.docker.internal:3000/ --host 0.0.0.0 --port 3001
+#     --port 3002
+ENTRYPOINT ["python", "-u", "-m", "mcp_cyberchef_service"]

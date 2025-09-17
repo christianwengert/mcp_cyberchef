@@ -1,0 +1,7 @@
+rapidfuzz
+mcp
+requests
+pydantic
+autogen-ext
+autogen-agentchat
+autogen-core
