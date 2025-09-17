@@ -94,11 +94,11 @@ See example/test-cyberchef.py for a full integration with Microsoft Autogen MCP 
    - recipe: [{"op":"From Base64","args":{}}]
 
 ## Cross platform builds
-Only once: `docker buildx create --use --name xbuilder2`
+Only once: `docker buildx create --use --name xbuilder`
 
 Further updates:
 ```
-docker buildx use xbuilder2
+docker buildx use xbuilder
 docker buildx build --platform linux/amd64 -f mcp_servers/mcp_cyberchef/Dockerfile -t cyberchef-mcp-amd64 --load .
 docker buildx use default
 ```
